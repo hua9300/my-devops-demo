@@ -1,0 +1,35 @@
+# .github/workflows/deploy.yml
+name: Deploy to GitHub Pages
+
+# This tells GitHub WHEN to run this automation
+on:
+  push:
+    branches: [ "main" ]  # Runs when you push to the 'main' branch
+
+# This is the actual job that runs
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Spins up a fresh Windows/Linux server for free
+
+    steps:
+      # Step 1: Download your code from GitHub into the virtual server
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Run a "test" to ensure the HTML is valid (Simulated test)
+      - name: Run a simple test
+        run: |
+          echo "Running tests..."
+          if grep -q "DevOps" index.html; then
+            echo "Test Passed: Found 'DevOps' in the file!"
+          else
+            echo "Test Failed!"
+            exit 1
+          fi
+
+      # Step 3: Upload the final code to GitHub Pages (hosting)
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./  # Tells it to upload everything in your folder
